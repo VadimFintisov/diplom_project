@@ -10,6 +10,7 @@
 */
 
 #define FUSE_USE_VERSION 26
+#define _FILE_OFFSET_BITS 64 //FIXED
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -25,6 +26,7 @@
 #include <gpgme.h>
 #include <regex.h>
 #include <syslog.h>
+#include "stdarg.h" //FIXED
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -65,7 +67,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 
 static int xmp_access(const char *path, int mask)
 {
-
 	int res;
 
 	res = access(path, mask);
@@ -108,7 +109,7 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		memset(&st, 0, sizeof(st));
 		st.st_ino = de->d_ino;
 		st.st_mode = de->d_type << 12;
-		if (filler(buf, de->d_name, &st, 0))
+        if (filler(buf, de->d_name, &st, 0, 0)) //FIXED: Added additional zero as an argument
 			break;
 	}
 
