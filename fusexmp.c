@@ -388,67 +388,6 @@ check_verify_result (gpgme_verify_result_t result, unsigned int summary,
             }
             return 1;
         }
-//int verify_sig(const char*filepath)
-//{
-//    gpgme_ctx_t ctx;
-//    gpgme_error_t err;
-//    gpgme_data_t hash, sig;
-//    gpgme_verify_result_t verify_result;
-//    const char *sigpath = make_filename (filepath,0),
-//            *hashpath = make_filename (filepath,1);
-//    int ret, tmp, cmp=0;
-
-//    init_gpgme (GPGME_PROTOCOL_OpenPGP);
-
-//    err = gpgme_new (&ctx);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_data_new_from_file (&sig, sigpath, 1);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_data_new_from_file (&hash, hashpath, 1);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    gpgme_data_seek (sig, 0, SEEK_SET);
-//    err = gpgme_op_verify (ctx, sig, hash, NULL);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    verify_result = gpgme_op_verify_result (ctx);
-
-//    tmp = check_verify_result (verify_result, 0, GPG_ERR_NO_ERROR);
-
-//    if (!tmp)
-//        return 0;
-
-//    char *fpr_from_sig = malloc(strlen (verify_result->signatures->fpr));
-//    memcpy(fpr_from_sig, verify_result->signatures->fpr,
-//           strlen (verify_result->signatures->fpr));
-
-//    cmp = !memcmp(fpr_from_sig, fpr_from_key,
-//                  strlen (verify_result->signatures->fpr));
-//    gpgme_release (ctx);
-//    if (!cmp)
-//    {
-//        syslog(LOG_ERR, "%s", "Неверный отпечаток ключа");
-//        return 0;
-//    }
-
-//    ret = gpgme_data_seek (hash, 0, SEEK_SET);
-//    if (ret)
-//        if (!fail_if_err (gpgme_err_code_from_errno (errno)))
-//            return 0;
-//    ret = gpgme_data_read (hash, etalonhash_buf, hashsize*2+1);
-//    gpgme_data_release (hash);
-//    if (ret < 0)
-//        if (!fail_if_err (gpgme_err_code_from_errno (errno)))
-//            return 0;
-
-//    return 1;
-//}
 
 const char *make_filename(const char *filepath, int type)
 {
@@ -482,19 +421,7 @@ int verify_sig(const char* filepath)
             *hashpath = make_filename (filepath,1);
     int ret, tmp, cmp=0;
     gpgme_check_version(NULL);
-//    init_gpgme (GPGME_PROTOCOL_OpenPGP, NULL);
 
-//    err = gpgme_new (&ctx);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_data_new_from_file (&sig, sigpath, 1);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_data_new_from_file (&hash, hashpath, 1);
-//    if (!fail_if_err (err))
-//        return 0;
     err = gpgme_new (&ctx);
     if (err!= GPG_ERR_NO_ERROR) {
         fprintf(stderr, "Ошибка инициализации GPGME: %s\n", gpgme_strerror(err));
@@ -513,10 +440,7 @@ int verify_sig(const char* filepath)
         return 1;
     }
 
-//    gpgme_data_seek (sig, 0, SEEK_SET);
-//    err = gpgme_op_verify (ctx, sig, hash, NULL);
-//    if (!fail_if_err (err))
-//        return 0;
+
     gpgme_data_seek (sig, 0, SEEK_SET);
     err = gpgme_op_verify (ctx, sig, hash, NULL);
     if (err!= GPG_ERR_NO_ERROR) {
@@ -550,15 +474,7 @@ int verify_sig(const char* filepath)
         return 0;
     }
 
-//    ret = gpgme_data_seek (hash, 0, SEEK_SET);
-//    if (ret)
-//        if (!fail_if_err (gpgme_err_code_from_errno (errno)))
-//            return 0;
-//    ret = gpgme_data_read (hash, etalonhash_buf, hashsize*2+1);
-//    gpgme_data_release (hash);
-//    if (ret < 0)
-//        if (!fail_if_err (gpgme_err_code_from_errno (errno)))
-//            return 0;
+
     ret = gpgme_data_seek (hash, 0, SEEK_SET);
     if (ret) {
         err = gpgme_err_code_from_errno (errno);
@@ -578,22 +494,6 @@ int verify_sig(const char* filepath)
     return 1;
 }
 
-//int compare_hash(const char*heshstring, unsigned char*heshbin, int heshsize)
-//{
-//    int rez = 0, i;
-//    char *Buf = malloc (heshsize*2+1);
-
-//    for (i = 0; i < heshsize; ++i)
-//    {
-//        sprintf(Buf+i*2,"%02hhx", heshbin[i]);
-//    }
-
-//    Buf[heshsize*2] = 0;
-//    rez = !memcmp(heshstring, Buf, heshsize*2);
-//    free(Buf);
-
-//    return rez;
-//}
 
 int compare_hash(const char*heshstring, unsigned char*heshbin, int heshsize)
 {
@@ -611,40 +511,6 @@ int compare_hash(const char*heshstring, unsigned char*heshbin, int heshsize)
 
     return rez;
 }
-
-//int verify_hash(const char*filepath)
-//{
-//    int py_file, rezult, tmp;
-//    unsigned char real_hash[hashsize];
-
-//    /* открытие скрипта на чтение и подсчет его хеша */
-//    py_file = open(filepath,O_RDONLY);
-//    if (py_file == -1)
-//    {
-//        syslog(LOG_ERR, "%s", "Запрашиваемый файл не существует");
-//        return 0;
-//    }
-//    if (rez_gost==0)
-//    {
-//	gost12_hash_file(py_file, hash_block_size, real_hash);
-//    }
-//    else gost12_hash_file_512(py_file, hash_block_size, real_hash);
-//    close(py_file);
-
-//    /* проверка подписи, сравнение рассчитанного и
-//       эталонного хешей */
-//    tmp = verify_sig(filepath);
-//    if (!tmp)
-//        return 2;
-
-//    if (etalonhash_buf != 0)
-//    {
-//        rezult = compare_hash(etalonhash_buf, real_hash, hashsize);
-//    }
-//    else rezult = 0;
-
-//    return rezult;
-//}
 
 int verify_hash(const char* filepath)
 {
@@ -685,75 +551,6 @@ int verify_hash(const char* filepath)
 
     return rezult;
 }
-
-//int init_config()
-//{
-//    FILE *fp;
-//    int i=0, a=0, tmp;
-//    const char *keypath = "/home/.keys/key.pub";
-//    gpgme_ctx_t ctx;
-//    gpgme_error_t err;
-//    gpgme_data_t key;
-//    gpgme_import_result_t import_result;
-
-//    /* чтение конфигурационного файла, запись его в массив строк
-//       и инициализация массива в виде регулярных выражений*/
-//    fp = fopen(CONFIGFILE,"r");
-//    if(!fp)
-//    {
-//        init_success=0;
-//        return 0;
-//    }
-
-//    while (fgets(str_array[i], MAX_LINE_LENGTH, fp))
-//    {
-//        int len=strlen(str_array[i]);
-//        str_array[i][len-1]=0;
-//        i++;
-//    }
-//    fclose(fp);
-//    str_array_size=i;
-
-//    for(i=0; i<str_array_size; i++)
-//    {
-//        a=regcomp(file_template + i, str_array[i], REG_EXTENDED|REG_NOSUB);
-//        if(a)
-//        {
-//            init_success=0;
-//            return 0;
-//        }
-//    }
-//    init_success=1;
-//    syslog(LOG_INFO, "%s", "Конфигурационный файл загружен");
-
-//    init_gpgme (GPGME_PROTOCOL_OpenPGP);
-
-//    err = gpgme_new (&ctx);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_data_new_from_file (&key, keypath, 1);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    err = gpgme_op_import (ctx, key);
-//    gpgme_data_release (key);
-//    if (!fail_if_err (err))
-//        return 0;
-
-//    import_result = gpgme_op_import_result (ctx);
-//    tmp = check_import_result (import_result, 0);
-//    if (!tmp)
-//        return 0;
-
-//    memcpy(fpr_from_key, import_result->imports->fpr,
-//           strlen (import_result->imports->fpr));
-//    gpgme_release (ctx);
-
-//    syslog(LOG_INFO, "%s", "Ключ проверки загружен");
-
-//    return 1;
-//}
 
 int init_config()
 {
