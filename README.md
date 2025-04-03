@@ -2,9 +2,9 @@
 
 Перейти в папку проекта
 cd ~/projects/fusexmp
+
 Собрать 
  
-
 gcc -Wall new_fusexmp.c pkg-config fuse --cflags --libs -o fusexmp -lgpgme -lgpg-error -lgost 
 
 # Активация fusexmp
