@@ -8,7 +8,7 @@ START_TEST(test_gost_hash_file)
 {
     char hash_output[65];  // Размер для ГОСТ 256 бит (64 символа + '\0')
     const char *test_file = "test_files/good.py";
-    const char *expected_hash = "a1b2c3d4e5f6...";  // Ожидаемый хеш (замените на реальный)
+    const char *expected_hash = "47dbf3f31719165efb018d3b89bddfddbdd8d7129e1293d4b6353c3abc47e568";  // Ожидаемый хеш 
 
     // Создаём тестовый файл
     FILE *f = fopen(test_file, "w");
