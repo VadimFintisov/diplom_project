@@ -8,7 +8,8 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install libfuse-dev pkg-config gostsum gnupg libgost-dev libgpgme11 libgpgme11-dev check
+        sudo apt install libfuse-dev pkg-config gostsum gnupg libgpgme11 libgpgme11-dev check
+        sudo apt install -y libgost-dev || sudo apt install -y libengine-gost-openssl1.1
     - name: Build tests
       run: gcc -Wall test_fusexmp.c -o test_fusexmp -lcheck -lgpgme -lgpg-error -lgost
     - name: Run tests
