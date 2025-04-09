@@ -80,7 +80,7 @@ projects/fusexmp
 
 Запускаем тестовый скрипт:
 
-python3 test.py
+`python3 test.py`
 
 он выводит Hello, World!
 Закрываем терминал
