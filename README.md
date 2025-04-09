@@ -26,9 +26,9 @@
 `cd ~/projects/fusexmp`
 
 Собрать 
- 
-`gcc -Wall fusexmp.c \`pkg-config fuse --cflags --libs\` -o fusexmp -lgpgme -lgpg-error -lgost`
-
+```bash 
+gcc -Wall fusexmp.c `pkg-config fuse --cflags --libs` -o fusexmp -lgpgme -lgpg-error -lgost
+```
 # Активация fusexmp
 Используя менеджер файлов, переходим в папку
 
