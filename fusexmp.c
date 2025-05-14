@@ -578,6 +578,10 @@ int init_config()
         int len = strlen(str_array[i]);
         str_array[i][len - 1] = 0;
         i++;
+	if (i >= MAX_LINE_COUNT) 
+	{
+	    break;
+	}
     }
     fclose(fp);
     str_array_size = i;
